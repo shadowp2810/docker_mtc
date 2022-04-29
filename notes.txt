@@ -241,4 +241,11 @@ We will notice that bringin the contain down does not clear the volume and data
 To remove volume as well
     $ docker-compose down -v
 
-
+----
+Nodered
+$ docker-compose up -d 
+$ curl localhost:1880
+$ docker volume ls
+$ docker inspect infrastructure_nodered-vol
+$ sudo ls /var/lib/docker/volumes/infrastructure_nodered-vol/_data
+ 
