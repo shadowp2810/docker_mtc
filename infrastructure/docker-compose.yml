@@ -27,7 +27,12 @@ services:
       - type: volume
         source: influxdb-vol
         target: /var/lib/influxdb2
-
+    environment:
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_USERNAME=pranavp2810
+      - DOCKER_INFLUXDB_INIT_PASSWORD=12345
+      - DOCKER_INFLUXDB_INIT_ORG=mtc
+      - DOCKER_INFLUXDB_INIT_BUCKET=mtcbucket
 volumes:
   dev1-vol: {}
   nodered-vol: {}
