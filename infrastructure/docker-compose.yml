@@ -38,7 +38,7 @@ services:
       - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=pranavp2810token
   grafana: 
     container_name: grafana
-    image: grafana/grafana
+    build: ./grafana/
     ports: 
       - "3000:3000"
     volumes: 
@@ -48,6 +48,7 @@ services:
     environment:
       - GF_SECURITY_ADMIN_USER=pranavp2810
       - GF_SECURITY_ADMIN_PASSWORD=12345
+      - INFLUXDB_TOKEN=pranavp2810token
 volumes:
   dev1-vol: {}
   nodered-vol: {}
