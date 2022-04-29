@@ -36,7 +36,20 @@ services:
       - DOCKER_INFLUXDB_INIT_ORG=ppp
       - DOCKER_INFLUXDB_INIT_BUCKET=pppbucket
       - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=pranavp2810token
+  grafana: 
+    container_name: grafana
+    image: grafana/grafana
+    ports: 
+      - "3000:3000"
+    volumes: 
+      - type: volume
+        source: grafana-vol
+        target: /var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_USER=pranavp2810
+      - GF_SECURITY_ADMIN_PASSWORD=12345
 volumes:
   dev1-vol: {}
   nodered-vol: {}
   influxdb-vol: {}
+  grafana-vol: {}
