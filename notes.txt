@@ -14,39 +14,39 @@ is where all the important info(images, layers, containers) is installed.
 $ sudo apt install tree
 $ tree --version
 Level 1 
- $ sudo tree -L 1 /var/lib/docker
+    $ sudo tree -L 1 /var/lib/docker
 Level 2
- $ sudo tree -L 2 /var/lib/docker
+    $ sudo tree -L 2 /var/lib/docker
 View images on system
- $ docker images 
+    $ docker images 
 Delete all images 
- $ docker rmi -f $ (docker images -a -q)
+    $ docker rmi -f $ (docker images -a -q)
 
 ----
 $ docker search python
 $ docker search --filter is-official=true python
 $ docker help
 As we run we can see each layer being installed 
- $ docker pull python
+    $ docker pull python
 $ docker images 
 $ docker images --help
 To get image ids of images
- $ docker images -q
+    $ docker images -q
 
 ----
 Pass image id retrieved though sub command into command
- $ docker history (docker images -q)
+    $ docker history (docker images -q)
 Format the output and put into file called latest
- $ docker history --format "{{.ID}} {{.CreatedBy}} {{.Size}}" (docker images -q) > latest
+    $ docker history --format "{{.ID}} {{.CreatedBy}} {{.Size}}" (docker images -q) > latest
 
 ----
 Many files will be shared when we install another version
- $ docker pull python:3.8
+    $ docker pull python:3.8
 Get the ID we are interested in from 
- $ docker images
+    $ docker images
 $ docker history --format "{{.ID}} {{.CreatedBy}} {{.Size}}" <THE IMAGE ID> > 38
 A much smaller build on linux alpine
- $ docker pull python:alpine
+    $ docker pull python:alpine
 Layers are stacked from bottom to top, 
 every layer from bottom to top that is the same between two containers
 will be shared, but as soon as a layer changes will be rebuilt.
@@ -55,66 +55,66 @@ will be shared, but as soon as a layer changes will be rebuilt.
 $ docker create --help
 $ docker create python
 Show all processes on system
- $ ps -aux
+    $ ps -aux
 $ docker ps --help
 Where a is all and s is size
- $ docker ps -as
+    $ docker ps -as
 $ docker start --help
 $ docker rename sweet_haslett python1
 
 ----
 Runs the command
- $ docker run python python -c 'print("random sentence")'
+    $ docker run python python -c 'print("random sentence")'
 Run the interpreter
- $ docker run -it python
+    $ docker run -it python
 $ docker run -it --rm --name python3 python
 Run detached
- $ docker run --name python3 -itd python
+    $ docker run --name python3 -itd python
 $ docker exec -it python3 python 
 Access shell of container
- $ docker exec -it python3 /bin/sh 
+    $ docker exec -it python3 /bin/sh 
 Stops container on exit
- $ docker attach python3
+    $ docker attach python3
 
 ----
 $ sudo apt install jq -y
 $ docker inspect --help
 Where s is size
- $ docker inspect -s python
+    $ docker inspect -s python
 Pipe to jq 
- $ docker inspect python1 | jq
- $ docker inspect python1 | jq keys
- $ docker inspect python1 | jq .[0] | jq keys
- $ docker inspect python1 | jq .[0].ResolveConfPath
- $ docker inspect python1 | jq -r .[0].ResolveConfPath
- $ sudo cat $(docker inspect python1 | jq -r .[0].ResolveConfPath)
+    $ docker inspect python1 | jq
+    $ docker inspect python1 | jq keys
+    $ docker inspect python1 | jq .[0] | jq keys
+    $ docker inspect python1 | jq .[0].ResolveConfPath
+    $ docker inspect python1 | jq -r .[0].ResolveConfPath
+    $ sudo cat $(docker inspect python1 | jq -r .[0].ResolveConfPath)
 
 ----
 Remove all container other than latest
- $ docker rm $(docker ps -a -q -filter before=$(docker ps -a -l --format {{Names}}))
+    $ docker rm $(docker ps -a -q -filter before=$(docker ps -a -l --format {{Names}}))
 Remove all images
- $ docker rmi -f $(docker images -q)
+    $ docker rmi -f $(docker images -q)
 
 ----
 Buysbox is a minimal container that has essential os tools to perform adhoc commands like pinging or renameing.
- $ docer pull buysbox 
+    $ docer pull buysbox 
 To look at where the filesystem layers are located, uses overlay2 
- $ docker inspect busybox 
+    $ docker inspect busybox 
 $ sudo su 
 $ cd var/lib/docker/overlay2
 $ tree --inodes -L 3
 $ df
 $ docker run -v /data -d busybox ping google.com
 To see if it is running
- $ docker ps
+    $ docker ps
 We see a lowerdir, mergeddir, upperdir, workdir
- $ docker inspect $(docker ps -l -q)
+    $ docker inspect $(docker ps -l -q)
 
 ----
 $ mkdir -p infrastructure/dev1/app
 ...
 Where t is tag and we look for build file in current directory
- $ docker build -t dev1 .
+    $ docker build -t dev1 .
 ...
 $ docker build -t dev1 .
 $ docker run -it dev1
@@ -122,8 +122,8 @@ $ docker run -it dev1
 $ docker build -t dev1 .
 $ docker run dev1 app.1.py
 Clean up
- $ docker rm -f $($docker ps -a -q)
- $ docker rmi -f $($docker images -q)
+    $ docker rm -f $($docker ps -a -q)
+    $ docker rmi -f $($docker images -q)
 
 ----
 $ watch docker ps
@@ -143,8 +143,8 @@ $ docker tag dev dev:new
   
 ----
 Clean up
- $ docker rm -f $(docker ps -a -q)  
- $ docker rmi -f $(docker images -q)  
+    $ docker rm -f $(docker ps -a -q)  
+    $ docker rmi -f $(docker images -q)  
 $ docker build -t dev1 .
 $ docker run -dp 5000:5000 dev1
 $ curl localhost:5000 
@@ -160,7 +160,7 @@ $ docker run -dp 5000:5000 dev:test
 $ docker volume create dev1-vol
 $ docker volume ls 
 We can find mountpoint directory here
- $ docker volume inspect dev1-vol
+    $ docker volume inspect dev1-vol
 $ sudo ls /var/lib/docker/volumes/dev1-vol
 $ docker rm -f $(docker ps -a -q)
 $ docker rmi -f $(docker images -q)
@@ -168,15 +168,60 @@ $ docker build -t dev1 .
 $ docker run -dp 5000:5000 --name dev1 --mount source=dev1-vol,target=/app dev1
 $ curl localhost:5000 
 Now has the contents of app in directory
- $ sudo cd /var/lib/docker/volumes/dev1-vol/_data
+    $ sudo cd /var/lib/docker/volumes/dev1-vol/_data
 $ docker volume rm dev1-vol
 
 
 -----------------------
 $ docker build -t dev1 .
 Get rid of container as soons as we exit out of it
- $ docker run --rm --name dev1 dev1
+    $ docker run --rm --name dev1 dev1
 In another termincal window and check if files were ignored. 
- $ docker exec -it dev1 /bin/sh
+    $ docker exec -it dev1 /bin/sh
 
 -----------------------
+What we will build:
+Node Red is a visual tool used to design IOT flows and other data flows,
+we will use it to pull data from python container and send it out to rest of containers,
+to automate it we will use a file called "flows.json" and others stored in volume "/data"
+Node Red(port 1880) will send a get request to dev1(port 5000) container "GET http://dev1:5000",
+which will respond with JSON data,
+and that will be sent to Influxdb(port 8086, mounted volume "var/lib/influxdb2"), 
+which will be configured with environemnt variables,
+we then configure Grafana(port 3000) to read that data and display it,
+Influxdb which is also a non relational time series database also has graphing utilities,
+but Grafana is more popular for graphing,
+withing Grafana we will preprovision our dashboards(dashboards.yml) and data sources(datasources.yml) such as Influxdb,
+and also automatically deploy without any additional configuration, using volume "/var/lib/grafana",
+Once we run Docker compose up, data will be flowing, stored and displayed. 
+We will also deploy Postgres(post 5432), and preprovision that automatically using "schema.sql" and attached volume "/var/lib/postgresql/data"
+We will use PostgREST which will infur the schema of the Postgres database and automatically create REST endpoints(POST http://postgrest:3000/temperature_data) for every table on database.
+The data will go into Postgres and Grafana will be able to read that data as well and we will have two matching charts,
+of all the data that is streaming from dev1 random generator. 
+
+dev1      192.168.128.2:5000
+Node-Red  192.168.128.6:1880
+Influxdb  192.168.128.3:8086
+PostgREST 192.168.128.4:3000
+          192.168.160.3:3000
+Postgres  192.168.160.2:5432
+Grafana   192.168.128.5:3000
+          192.168.160.4:3000
+          192.168.144.2:3000
+          host: 3000
+
+Network CIDRs to reduce attack surface-
+Frontend: 192.168.122.0/24
+Backend:  192.168.128.0/20
+Postgres: 192.168.120.0/24
+Host:     172.31.53.0/20
+
+----
+In infrastructure directory
+    In attached mode
+        $ docker-compose up
+    In detached mode where it run in background and we can continue using same terminal window
+        $ docker-compose up -d 
+    $ docker-compose down
+
+
