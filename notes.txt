@@ -249,3 +249,38 @@ $ docker volume ls
 $ docker inspect infrastructure_nodered-vol
 $ sudo ls /var/lib/docker/volumes/infrastructure_nodered-vol/_data
  
+----
+Nodered will pull information and supply to to databases.
+Timestamp to http request to msg payload
+$ ip addr show | grep 172
+Method GET, URL 172.31.62.57:5000, Payload ignore, Return a parsed JSON object
+The ip address will change everytime we deploy, so instead we get ipaddress of api
+$ docker ps
+$ docker inspect dev1 | grep IPAddress
+$ docker inspect dev1 | jq .[0] | jq keys
+$ docker inspect dev1 | jq .[0].NetworkSettings | jq keys
+$ docker inspect dev1 | jq .[0].NetworkSettings.Networks | jq keys
+$ docker inspect dev1 | jq .[0].NetworkSettings.Networks[] | jq keys
+$ docker inspect dev1 | jq .[0].NetworkSettings.Networks[].IPAddress
+Remove quotes
+    $ docker inspect dev1 | jq -r .[0].NetworkSettings.Networks[].IPAddress
+But since we are using an automation process like Docker, 
+we can just replace the <IPAddress>:5000 with api:5000 or dev1:5000
+
+----
+$ docker network ls
+$ docker inspect infrastructure_default
+In another Terminal window
+    $ sudo su
+    # cd /var/lib/docker/volumes
+    # ls
+    # cd infrastructure_nodered-vol/
+    # ls
+    # cd _data
+    # ls
+    # cat flows.json
+$ docker cp nodered:/data/flows.json nodered/
+$ docker-compose down -v
+$ docker-compose up -d
+
+----

@@ -11,7 +11,7 @@ services:
         target: /app 
   nodered:
     container_name: nodered
-    image: nodered/node-red
+    build: ./nodered/
     ports:
       - "1880:1880"
     volumes:
