@@ -1,0 +1,182 @@
+Uses a filesystem called overlay2, where binary is shared by containers.
+Docker containers are essentially system processes isolated by "cgroups"
+
+----
+Gives increasing verbosity of information
+$ docker --version
+$ docker version
+$ docker info 
+
+Docker Root Dir: /var/lib/docker
+is where all the important info(images, layers, containers) is installed.
+
+----
+$ sudo apt install tree
+$ tree --version
+Level 1 
+ $ sudo tree -L 1 /var/lib/docker
+Level 2
+ $ sudo tree -L 2 /var/lib/docker
+View images on system
+ $ docker images 
+Delete all images 
+ $ docker rmi -f $ (docker images -a -q)
+
+----
+$ docker search python
+$ docker search --filter is-official=true python
+$ docker help
+As we run we can see each layer being installed 
+ $ docker pull python
+$ docker images 
+$ docker images --help
+To get image ids of images
+ $ docker images -q
+
+----
+Pass image id retrieved though sub command into command
+ $ docker history (docker images -q)
+Format the output and put into file called latest
+ $ docker history --format "{{.ID}} {{.CreatedBy}} {{.Size}}" (docker images -q) > latest
+
+----
+Many files will be shared when we install another version
+ $ docker pull python:3.8
+Get the ID we are interested in from 
+ $ docker images
+$ docker history --format "{{.ID}} {{.CreatedBy}} {{.Size}}" <THE IMAGE ID> > 38
+A much smaller build on linux alpine
+ $ docker pull python:alpine
+Layers are stacked from bottom to top, 
+every layer from bottom to top that is the same between two containers
+will be shared, but as soon as a layer changes will be rebuilt.
+
+----
+$ docker create --help
+$ docker create python
+Show all processes on system
+ $ ps -aux
+$ docker ps --help
+Where a is all and s is size
+ $ docker ps -as
+$ docker start --help
+$ docker rename sweet_haslett python1
+
+----
+Runs the command
+ $ docker run python python -c 'print("random sentence")'
+Run the interpreter
+ $ docker run -it python
+$ docker run -it --rm --name python3 python
+Run detached
+ $ docker run --name python3 -itd python
+$ docker exec -it python3 python 
+Access shell of container
+ $ docker exec -it python3 /bin/sh 
+Stops container on exit
+ $ docker attach python3
+
+----
+$ sudo apt install jq -y
+$ docker inspect --help
+Where s is size
+ $ docker inspect -s python
+Pipe to jq 
+ $ docker inspect python1 | jq
+ $ docker inspect python1 | jq keys
+ $ docker inspect python1 | jq .[0] | jq keys
+ $ docker inspect python1 | jq .[0].ResolveConfPath
+ $ docker inspect python1 | jq -r .[0].ResolveConfPath
+ $ sudo cat $(docker inspect python1 | jq -r .[0].ResolveConfPath)
+
+----
+Remove all container other than latest
+ $ docker rm $(docker ps -a -q -filter before=$(docker ps -a -l --format {{Names}}))
+Remove all images
+ $ docker rmi -f $(docker images -q)
+
+----
+Buysbox is a minimal container that has essential os tools to perform adhoc commands like pinging or renameing.
+ $ docer pull buysbox 
+To look at where the filesystem layers are located, uses overlay2 
+ $ docker inspect busybox 
+$ sudo su 
+$ cd var/lib/docker/overlay2
+$ tree --inodes -L 3
+$ df
+$ docker run -v /data -d busybox ping google.com
+To see if it is running
+ $ docker ps
+We see a lowerdir, mergeddir, upperdir, workdir
+ $ docker inspect $(docker ps -l -q)
+
+----
+$ mkdir -p infrastructure/dev1/app
+...
+Where t is tag and we look for build file in current directory
+ $ docker build -t dev1 .
+...
+$ docker build -t dev1 .
+$ docker run -it dev1
+...
+$ docker build -t dev1 .
+$ docker run dev1 app.1.py
+Clean up
+ $ docker rm -f $($docker ps -a -q)
+ $ docker rmi -f $($docker images -q)
+
+----
+$ watch docker ps
+$ docker run -dp 5000:5000 dev
+$ docker pause $(docker ps -l -q)<CONTAINER-ID>
+$ docker unpause $(docker ps -l -q)<CONTAINER-ID>
+$ docker kill $(docker ps -l -q)<CONTAINER-ID>
+
+----
+Take backup of docker image as tar file
+$ docker save -o dev.tar dev
+$ tar -tvf dev.tar
+$ docker load -i dev.tar
+$ docker images
+$ docker run dev
+$ docker tag dev dev:new
+  
+----
+Clean up
+ $ docker rm -f $(docker ps -a -q)  
+ $ docker rmi -f $(docker images -q)  
+$ docker build -t dev1 .
+$ docker run -dp 5000:5000 dev1
+$ curl localhost:5000 
+$ docker exec -it $(docker ps -l -q) /bin/sh
+$ docker export --output="test.tar" $(docker ps -l -q)
+$ tar -tvf dev.tar | less
+$ tar -tvf test.tar | less
+$ tar -tvf test.tar | grep app.py
+$ docker import test.tar dev:test
+$ docker run -dp 5000:5000 dev:test
+
+----
+$ docker volume create dev1-vol
+$ docker volume ls 
+We can find mountpoint directory here
+ $ docker volume inspect dev1-vol
+$ sudo ls /var/lib/docker/volumes/dev1-vol
+$ docker rm -f $(docker ps -a -q)
+$ docker rmi -f $(docker images -q)
+$ docker build -t dev1 .
+$ docker run -dp 5000:5000 --name dev1 --mount source=dev1-vol,target=/app dev1
+$ curl localhost:5000 
+Now has the contents of app in directory
+ $ sudo cd /var/lib/docker/volumes/dev1-vol/_data
+$ docker volume rm dev1-vol
+
+
+-----------------------
+$ docker build -t dev1 .
+Get rid of container as soons as we exit out of it
+ $ docker run --rm --name dev1 dev1
+In another termincal window and check if files were ignored. 
+ $ docker exec -it dev1 /bin/sh
+
+-----------------------
