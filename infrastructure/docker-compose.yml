@@ -49,8 +49,22 @@ services:
       - GF_SECURITY_ADMIN_USER=pranavp2810
       - GF_SECURITY_ADMIN_PASSWORD=12345
       - INFLUXDB_TOKEN=pranavp2810token
+  postgres:
+    container_name: postgres
+    build: ./postgres/
+    ports:
+      - "5432:5432"
+    volumes:
+      - type: volume
+        source: postgres-vol
+        target: /var/lib/postgres/data
+    environment: 
+      - POSTGRES_USER=pranavp2810
+      - POSTGRES_PASSWORD=12345
+      - POSTGRES_DB=pppdb
 volumes:
   dev1-vol: {}
   nodered-vol: {}
   influxdb-vol: {}
   grafana-vol: {}
+  postgres-vol: {}

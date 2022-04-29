@@ -330,3 +330,6 @@ $ docker cp nodered:/data/flows_cred.json nodered/
 $ docker cp nodered:/data/settings.js nodered/
 From the settings.js file, uncomment credentialSecret and set it to false.
 
+----
+Login to Postgres from terminal
+    $ docker exec -it postgres psql -d pppdb -U pranavp2810 -c "\1"
