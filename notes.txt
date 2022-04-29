@@ -284,3 +284,12 @@ $ docker-compose down -v
 $ docker-compose up -d
 
 ----
+We are going to store the data into Influxdb
+Write the following into compose 
+    $ docker run -p 8086:8086 \ -v influxdb2:/var/lib/influxdb2 \ influxdb:2.0
+$ docker-compose up -d 
+$ curl localhost:8086
+$ docker ps
+$ docker-compose down -v
+
+----

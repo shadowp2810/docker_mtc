@@ -18,6 +18,17 @@ services:
       - type: volume
         source: nodered-vol
         target: /data
+  influxdb:
+    container_name: influxdb
+    image: influxdb
+    ports:
+      - "8086:8086"
+    volumes:
+      - type: volume
+        source: influxdb-vol
+        target: /var/lib/influxdb2
+
 volumes:
   dev1-vol: {}
   nodered-vol: {}
+  influxdb-vol: {}
