@@ -322,3 +322,11 @@ And in dockercompose we build from dockerfile instead of pulling image.
 To make sure it builds, even though it should anyway
     $ docker-compose up --build -d
 The watch window should now show a healthcheck from influxdb
+
+
+----
+$ docker cp nodered:/data/flows.json nodered/
+$ docker cp nodered:/data/flows_cred.json nodered/
+$ docker cp nodered:/data/settings.js nodered/
+From the settings.js file, uncomment credentialSecret and set it to false.
+
