@@ -224,4 +224,21 @@ In infrastructure directory
         $ docker-compose up -d 
     $ docker-compose down
 
+----
+target is location within container where we want to populate in the volume
+$ docker-compose up -d 
+$ curl localhost:5000
+$ docker ps
+$ docker volume ls
+$ docker inspect infrastructure_dev1-vol
+$ sudo ls /var/lib/docker/volumes/infrastructure_dev1-vol/_data
+We can modify the file in volume 
+    $ sudo vim /var/lib/docker/volumes/infrastructure_dev1-vol/_data/app.py
+    To escape 
+    :wq!
+We will notice that bringin the contain down does not clear the volume and data
+    $ docker-compose down
+To remove volume as well
+    $ docker-compose down -v
+
 
