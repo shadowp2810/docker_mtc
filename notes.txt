@@ -333,3 +333,15 @@ From the settings.js file, uncomment credentialSecret and set it to false.
 ----
 Login to Postgres from terminal
     $ docker exec -it postgres psql -d pppdb -U pranavp2810 -c "\1"
+
+----
+Stop postgres
+    $ docker-compose rm -s postgres
+$ docker volume ls 
+$ docker volume rm infrastructure_postgres-vol
+$ docker-compose up --build -d
+List tables
+    $ docker exec -it postgres psql -d pppdb -U pranavp2810 -c "\dt"
+Shoe temperature table
+    $ docker exec -it postgres psql -d pppdb -U pranavp2810 -c "select * from temperature_data"
+
