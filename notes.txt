@@ -293,3 +293,32 @@ $ docker ps
 $ docker-compose down -v
 
 ----
+In nodered, install influxdb package, and from influxdb copy over the token in account,
+add the token info and other influxdb info to nodered. 
+Connect the http request module with function module which will connect to influxdb module. 
+Set the function module as 
+```
+msg.payload = [
+    [
+        {
+            temp: msg.payload.data.temp,
+        },
+        {
+            device: msg.payload.data.device,
+            container: msg.payload.data.name
+        }
+    ]
+];
+return msg
+```
+
+----
+To healthcheck, keep running in a window
+    $ watch docker compose ps
+Shows no healthcheck for influxdb
+    $ docker compose up
+We make a Dockerfile for influfdb and add a healthcheck.
+And in dockercompose we build from dockerfile instead of pulling image.
+To make sure it builds, even though it should anyway
+    $ docker-compose up --build -d
+The watch window should now show a healthcheck from influxdb
