@@ -62,6 +62,14 @@ services:
       - POSTGRES_USER=pranavp2810
       - POSTGRES_PASSWORD=12345
       - POSTGRES_DB=pppdb
+  postgrest:
+    container_name: postgrest
+    image: postgrest/postgrest
+    ports: 
+      - "4000:3000"
+    environment: 
+      - PGRST_DB_URI=postgres://pranavp2810:12345@postgres:5432/pppdb
+      - PGRST_DB_ANON_ROLE=pranavp2810
 volumes:
   dev1-vol: {}
   nodered-vol: {}
