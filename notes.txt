@@ -384,3 +384,5 @@ A postgres network for postgres, postgrest and grafana.
 A host network for flask, node-red. influxdb, grafana, postgrest and postgres. 
 
 First we remove the ports for dev1, influxdb, postgres and postgrest. 
+
+----
