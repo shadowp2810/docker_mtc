@@ -2,7 +2,7 @@ version: "3.9"
 services:
   api: 
     container_name: dev1
-    image: registry.gitlab.com/ppp-infra/dev1:latest
+    build: ./dev1/
     networks:
       - backend
     volumes: 
@@ -24,7 +24,7 @@ services:
       - INFLUXDB_TOKEN=pranavp2810token
   influxdb:
     container_name: influxdb
-    image: registry.gitlab.com/ppp-infra/influxdb:latest
+    build: ./influxdb/
     networks:
       - backend
     volumes:
@@ -40,7 +40,7 @@ services:
       - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=pranavp2810token
   grafana: 
     container_name: grafana
-    image: registry.gitlab.com/ppp-infra/grafana:latest
+    build: ./grafana/
     networks:
       - frontend
       - backend
@@ -60,7 +60,7 @@ services:
       - POSTGRES_PASSWORD=12345
   postgres:
     container_name: postgres
-    image: registry.gitlab.com/ppp-infra/postgres:latest
+    build: ./postgres/
     networks:
       - db
     volumes:

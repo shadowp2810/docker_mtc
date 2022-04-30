@@ -421,3 +421,57 @@ Shows populated database
 $ docker-compose start postgrest 
 
 ----
+In out gitlab account create a personal token with expiry and give all access. 
+Everytime we upload code it will automatically create the image and store it within our container registry. 
+
+----
+We have a pppinfra group which will contain all the images. 
+----
+Unlike docker hub, gitlab is free and our containers are private
+$ docker login registry.gitlab.com
+$ docker build -t registry.gitlab.com/pppinfra/dev1 .
+We can see the image listed here 
+    $ docker images
+$ docker push registry.gitlab.com/mtcinfra/dev1
+If we wanted a different tag
+$ docker build -t registry.gitlab.com/mtcinfra/dev1:dev .
+$ docker push registry.gitlab.com/mtcinfra/dev1:dev
+$ docker pull registry.gitlab.com/pppinfra/dev1:latest
+$ docker images 
+Since there are two of same image with same id, we delete them and re add
+    $ docker rmi -f <IMAGE-ID>
+    $ docker pull registry.gitlab.com/pppinfra/dev1:latest
+
+----
+We go into pppinfra/dev1, hit New File, select .gitlab-ci.yml, choose template Docker,
+this will everytime we push to gitlab check the branch name and automatically create a container based on branch name
+We copy the template code into our local dev1 directory.
+Then in terminal in infrastructure/dev1 
+$ git config --global user.name "Pranav Pradeep"
+$ git config --global user.email "pppdocker@<EMAIL>.com" 
+$ git init
+$ git remote add origin https://gitlab.com/pppinfra/dev1.git
+$ git add 
+$ git commit -m "Init"
+$ git branch -m master main
+$ git push -u origin main 
+The token is the password
+We can then run pipeline within gitlab.
+
+----
+In our docker-compose, instead of building we can pull the image from gitlab
+In gitlab we create new projects in pppinfra group for grafana, influxdb and postgres
+We put a .gitlab-ci.yml file into each of the directories 
+In the gitinit.sh file, awk pulls the name of folder name and specifies that as repository name
+Outside infrastructure directory,
+$ chmod +x gitinit.sh
+$ cd infrastructure
+and copy the gitinit.sh file into each of the project directories. 
+Within each of the directories run the gitinit.sh script, and add username and token password
+    $ ./gitinit.sh
+
+----
+We can now pull the images for each in docker-compose, instead of building.
+$ docker rmi -f $(docker images -q)
+$ docker images 
+$ docker compose up --build -d 
