@@ -386,3 +386,38 @@ A host network for flask, node-red. influxdb, grafana, postgrest and postgres.
 First we remove the ports for dev1, influxdb, postgres and postgrest. 
 
 ----
+We can use docker exec to backup and restore out postgress database. 
+$ docker compose up -d 
+$ docker ps 
+$ docker compose exec --help
+$ docker compose exec postgres /bin/bash
+    # exit
+We see index starts at 1
+    $ docker-compose exec --help
+$ docker-compose exec postgres psql -U pranavp2810 -d pppdb 
+    To see all tables 
+    # /dt
+    # select * from temperature_data limit 10
+    To quit
+    # \q
+$ docker-compose exec -T postgres psql -U pranavp2810 -d pppdb -c 'select * from temperature_data limit 10;'
+$ docker-compose stop postgrest
+Dump a copy of the database into a sql file
+    $ docker-compose exec -T postgres pg_dumpall -U pranavp2810 --database pppdb --data-only > dump.sql
+Stop container and remove, where s is stop
+    $ docker-compose rm -s postgres
+$ docker volume ls
+$ docker volume rm -f infrastructure_postgres-vol
+We create an alias
+    $ alias psql="docker-compose exec -T postgres psql"
+We bring the container back up
+    $ docker-compose up -d postgres
+Show an empty database
+    $ psql -U pranavp2810 -d pppdb -c 'select * from temperature_data limit 10;'
+Pipe it
+    $ cat dump.sql | psql -U pranavp2810 -d pppdb
+Shows populated database
+    $ psql -U pranavp2810 -d pppdb -c 'select * from temperature_data limit 10;'
+$ docker-compose start postgrest 
+
+----
