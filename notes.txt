@@ -345,3 +345,28 @@ List tables
 Shoe temperature table
     $ docker exec -it postgres psql -d pppdb -U pranavp2810 -c "select * from temperature_data"
 
+----
+We use a dockercompose connection 3000 and not public 4000
+    http://postgrest:3000/temperature_data
+In nodered we make a connection between the http request node and a new function node and another http request node
+In the function node
+```
+msg.payload = [
+    {
+        "device":msg.payload.data.device,
+        "container":msg.payload.data.container,
+        "temperature":msg.payload.data.temp
+    }
+];
+return msg;
+```
+Copy the flow.json from nodered and save flow.json file in nodered directory. 
+----
+
+```
+SELECT created_at AS "time", device, avg(temperature) AS "temperature"
+FROM temperature_data
+WHERE $__timeFilter(created_at)
+GROUP BY device, created_at
+ORDER BY 1
+```

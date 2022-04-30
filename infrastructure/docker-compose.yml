@@ -49,6 +49,9 @@ services:
       - GF_SECURITY_ADMIN_USER=pranavp2810
       - GF_SECURITY_ADMIN_PASSWORD=12345
       - INFLUXDB_TOKEN=pranavp2810token
+      - POSTGRES_USER=pranavp2810
+      - POSTGRES_DB=pppdb
+      - POSTGRES_PASSWORD=12345
   postgres:
     container_name: postgres
     build: ./postgres/
