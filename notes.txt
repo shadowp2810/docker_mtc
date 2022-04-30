@@ -370,3 +370,17 @@ WHERE $__timeFilter(created_at)
 GROUP BY device, created_at
 ORDER BY 1
 ```
+
+Update the datasources and dashboards file from grafana. 
+
+$ docker-compose down -v
+$ docker-compose up --build -d
+
+----
+We will now secregrate networks. 
+A backend network for flask, node-red. influxdb, grafana and postgrest.
+A frontend network for grafana.
+A postgres network for postgres, postgrest and grafana. 
+A host network for flask, node-red. influxdb, grafana, postgrest and postgres. 
+
+First we remove the ports for dev1, influxdb, postgres and postgrest. 

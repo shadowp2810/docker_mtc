@@ -3,8 +3,8 @@ services:
   api: 
     container_name: dev1
     build: ./dev1/
-    networks:
-      - backend
+    ports: 
+      - "5000:5000"
     volumes: 
       - type: volume
         source: dev1-vol
@@ -12,8 +12,6 @@ services:
   nodered:
     container_name: nodered
     build: ./nodered/
-    networks:
-      - backend
     ports:
       - "1880:1880"
     volumes:
@@ -25,8 +23,8 @@ services:
   influxdb:
     container_name: influxdb
     build: ./influxdb/
-    networks:
-      - backend
+    ports:
+      - "8086:8086"
     volumes:
       - type: volume
         source: influxdb-vol
@@ -41,10 +39,6 @@ services:
   grafana: 
     container_name: grafana
     build: ./grafana/
-    networks:
-      - frontend
-      - backend
-      - db
     ports: 
       - "3000:3000"
     volumes: 
@@ -61,8 +55,8 @@ services:
   postgres:
     container_name: postgres
     build: ./postgres/
-    networks:
-      - db
+    ports:
+      - "5432:5432"
     volumes:
       - type: volume
         source: postgres-vol
@@ -74,9 +68,8 @@ services:
   postgrest:
     container_name: postgrest
     image: postgrest/postgrest
-    networks:
-      - backend
-      - db
+    ports: 
+      - "4000:3000"
     environment: 
       - PGRST_DB_URI=postgres://pranavp2810:12345@postgres:5432/pppdb
       - PGRST_DB_ANON_ROLE=pranavp2810
@@ -86,7 +79,3 @@ volumes:
   influxdb-vol: {}
   grafana-vol: {}
   postgres-vol: {}
-networks:
-  frontend: {}
-  backend: {}
-  db: {}
